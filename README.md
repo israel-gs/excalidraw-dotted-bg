@@ -2,6 +2,8 @@
 
 Chrome extension that adds a dotted background to [excalidraw.com](https://excalidraw.com) that scales and pans in real-time with the canvas.
 
+![Excalidraw with dotted background](docs/screenshot.png)
+
 ## Install
 
 1. Clone this repo (or download as ZIP).
