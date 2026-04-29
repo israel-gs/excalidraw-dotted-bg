@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Excalidraw Dotted Background",
-  "version": "1.0.0",
-  "description": "Adds a dotted background pattern to Excalidraw.",
+  "version": "1.1.0",
+  "description": "Adds a configurable dotted background to Excalidraw.",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Excalidraw Dotted Background"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -10,6 +15,7 @@
         "https://*.excalidraw.com/*"
       ],
       "css": ["content.css"],
+      "js": ["bridge.js"],
       "run_at": "document_start"
     },
     {

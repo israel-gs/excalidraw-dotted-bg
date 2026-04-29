@@ -1,6 +1,12 @@
 (function () {
-  const BASE_DOT_SPACING = 24;
+  const DEFAULT_BASE_SPACING = 24;
   const root = document.documentElement;
+
+  function readBaseSpacing() {
+    const raw = getComputedStyle(root).getPropertyValue("--excd-base-spacing");
+    const parsed = parseFloat(raw);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_BASE_SPACING;
+  }
 
   const debug = {
     fiberFound: false,
@@ -135,6 +141,7 @@
   let lastZoom = -1;
   let lastSx = NaN;
   let lastSy = NaN;
+  let lastBase = -1;
 
   function tick() {
     debug.rafTicks++;
@@ -152,12 +159,20 @@
       const scrollX = s.scrollX;
       const scrollY = s.scrollY;
 
-      if (zoom !== lastZoom || scrollX !== lastSx || scrollY !== lastSy) {
+      const base = readBaseSpacing();
+
+      if (
+        zoom !== lastZoom ||
+        scrollX !== lastSx ||
+        scrollY !== lastSy ||
+        base !== lastBase
+      ) {
         lastZoom = zoom;
         lastSx = scrollX;
         lastSy = scrollY;
+        lastBase = base;
 
-        const size = BASE_DOT_SPACING * zoom;
+        const size = base * zoom;
         const screenX = scrollX * zoom;
         const screenY = scrollY * zoom;
         const offX = (((screenX % size) + size) % size);

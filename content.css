@@ -2,12 +2,18 @@
   --excd-size: 24px;
   --excd-offset-x: 0px;
   --excd-offset-y: 0px;
+  --excd-base-spacing: 24px;
+  --excd-dot-radius: 1.2px;
 }
 
 .excalidraw,
 .excalidraw .App-canvas-container {
   background-color: #fafafa;
-  background-image: radial-gradient(circle, #b8b8b8 1.2px, transparent 1.2px);
+  background-image: radial-gradient(
+    circle,
+    #b8b8b8 var(--excd-dot-radius),
+    transparent var(--excd-dot-radius)
+  );
   background-size: var(--excd-size) var(--excd-size);
   background-position: var(--excd-offset-x) var(--excd-offset-y);
 }
@@ -15,7 +21,11 @@
 .excalidraw.theme--dark,
 .excalidraw.theme--dark .App-canvas-container {
   background-color: #121212;
-  background-image: radial-gradient(circle, #3a3a3a 1.2px, transparent 1.2px);
+  background-image: radial-gradient(
+    circle,
+    #3a3a3a var(--excd-dot-radius),
+    transparent var(--excd-dot-radius)
+  );
 }
 
 .excalidraw__canvas.static {

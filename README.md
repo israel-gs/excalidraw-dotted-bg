@@ -10,6 +10,15 @@ Chrome extension that adds a dotted background to [excalidraw.com](https://excal
 
 The extension auto-injects on `https://excalidraw.com/*` and any subdomain.
 
+## Configuration
+
+Click the extension icon in the toolbar to open the popup. Two sliders:
+
+- **Spacing** — distance between dots in scene units (default 24px, range 8–80).
+- **Dot size** — radius of each dot in pixels (default 1.2px, range 0.4–3).
+
+Settings persist in `chrome.storage.local` and apply live to any open Excalidraw tab.
+
 ## How it works
 
 Excalidraw's static canvas applies the zoom via `setTransform`, but **does not** apply `scrollX/scrollY` at viewport scope — scroll is baked into per-element `translate()` calls. `localStorage["excalidraw-state"]` carries the full state (`zoom.value`, `scrollX`, `scrollY`) but Excalidraw debounces saves ~300 ms, which is too slow for real-time tracking.
@@ -31,9 +40,11 @@ Scene origin `(0, 0)` renders at screen position `(scrollX * zoom, scrollY * zoo
 
 | File | Purpose |
 |------|---------|
-| `manifest.json` | MV3 manifest. Two content scripts: CSS in the default isolated world, JS in `world: "MAIN"` (required for React fiber access). |
-| `content.css` | Dotted pattern via `radial-gradient`. Uses CSS variables (`--excd-size`, `--excd-offset-x/y`) updated by JS. |
-| `content.js` | Fiber traversal + `requestAnimationFrame` loop. Updates CSS variables when state changes. |
+| `manifest.json` | MV3 manifest. Two content scripts: CSS + bridge in the default isolated world, JS in `world: "MAIN"` (required for React fiber access). Declares the popup action and `storage` permission. |
+| `content.css` | Dotted pattern via `radial-gradient`. Uses CSS variables (`--excd-size`, `--excd-offset-x/y`, `--excd-dot-radius`) updated by JS. |
+| `content.js` | Fiber traversal + `requestAnimationFrame` loop. Reads `--excd-base-spacing` from CSS each frame so user settings drive `size = base * zoom`. |
+| `bridge.js` | Isolated-world content script. Reads `chrome.storage.local`, writes `--excd-base-spacing` and `--excd-dot-radius` to `:root`. Listens for storage changes and re-applies. |
+| `popup.html` / `popup.js` | Settings UI. Writes to `chrome.storage.local`; the bridge picks it up. |
 
 ## Limitations
 
